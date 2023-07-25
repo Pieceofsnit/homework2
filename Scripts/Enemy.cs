@@ -32,7 +32,6 @@ public class Enemy : MonoBehaviour
         {
             _moveVector.x = _direction;
         }
-
         else if (_turningPointB.position.x <= transform.position.x)
         {
             _moveVector.x = - _direction;
