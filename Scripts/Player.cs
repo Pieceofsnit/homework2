@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float _speed;
-    [SerializeField] private float _jumpForce;
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private Animator _animator;
+    [SerializeField] private float _jumpForce;
     [SerializeField] private float _checkRadius;
-    private int _coin;
+    [SerializeField] private float _speed;
+
+    public LayerMask Ground;
+    public Transform GroundCheck;
+    public bool _isGrounded;
     private Rigidbody2D _rigidbody;
     private Vector2 _moveVector;
-    public bool _isGrounded;
-    public Transform GroundCheck;
-    public LayerMask Ground;
+    private int _coin;
+    private readonly int _move = Animator.StringToHash("Speed");
+    private readonly int _ground = Animator.StringToHash("IsGrounded");
 
 
     private void Start()
@@ -30,6 +33,8 @@ public class Player : MonoBehaviour
         Flip();
         CheckingGround();
         Jump();
+        DrawAnimation();
+        InputMove();
     }
 
     private void Flip()
@@ -39,9 +44,19 @@ public class Player : MonoBehaviour
 
     private void Run()
     {
-        _moveVector.x = Input.GetAxisRaw("Horizontal");
         _rigidbody.velocity = new Vector2(_moveVector.x * _speed, _rigidbody.velocity.y);
-        _animator.SetFloat("Speed", Mathf.Abs(_moveVector.x));
+    }
+
+    private void DrawAnimation()
+    {
+        _animator.SetFloat(_move, Mathf.Abs(_moveVector.x));
+        _animator.SetBool(_ground, _isGrounded);
+
+    }
+    private void InputMove()
+    {
+        _moveVector.x = Input.GetAxisRaw("Horizontal");
+
     }
 
     private void Jump()
@@ -52,13 +67,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void CheckingGround()
+    private void CheckingGround()
     {
         _isGrounded = Physics2D.OverlapCircle(GroundCheck.position, _checkRadius, Ground);
-        _animator.SetBool("IsGrounded", _isGrounded);
     }
 
-    public void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent<AppleCoin>(out AppleCoin appleCoin))
         {
