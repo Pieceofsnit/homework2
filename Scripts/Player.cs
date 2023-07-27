@@ -2,29 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
+
 public class Player : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer _spriteRenderer;
-    [SerializeField] private Animator _animator;
     [SerializeField] private float _jumpForce;
-    [SerializeField] private float _checkRadius;
+    [SerializeField] private float _checkGroundRadius;
     [SerializeField] private float _speed;
+    [SerializeField] private LayerMask Ground;
+    [SerializeField] private Transform GroundCheck;
 
-    public LayerMask Ground;
-    public Transform GroundCheck;
-    public bool _isGrounded;
+    private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidbody;
     private Vector2 _moveVector;
     private int _coin;
+    private bool _isGrounded;
     private readonly int _move = Animator.StringToHash("Speed");
     private readonly int _ground = Animator.StringToHash("IsGrounded");
 
 
     private void Start()
     {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        _checkRadius = GroundCheck.GetComponent<CircleCollider2D>().radius;
+        _checkGroundRadius = GroundCheck.GetComponent<CircleCollider2D>().radius;
     }
 
     private void Update()
@@ -51,12 +56,11 @@ public class Player : MonoBehaviour
     {
         _animator.SetFloat(_move, Mathf.Abs(_moveVector.x));
         _animator.SetBool(_ground, _isGrounded);
-
     }
+
     private void InputMove()
     {
         _moveVector.x = Input.GetAxisRaw("Horizontal");
-
     }
 
     private void Jump()
@@ -69,7 +73,7 @@ public class Player : MonoBehaviour
 
     private void CheckingGround()
     {
-        _isGrounded = Physics2D.OverlapCircle(GroundCheck.position, _checkRadius, Ground);
+        _isGrounded = Physics2D.OverlapCircle(GroundCheck.position, _checkGroundRadius, Ground);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
