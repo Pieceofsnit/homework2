@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
 
@@ -35,7 +35,6 @@ public class Enemy : MonoBehaviour
 
     private void Patrol()
     {
-        
         _animator.SetFloat(_move, Mathf.Abs(_moveVector.x));
 
         if (_turningPointA.position.x >= transform.position.x)
