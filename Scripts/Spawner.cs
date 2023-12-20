@@ -17,13 +17,13 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator SpawnAppleCoins()
     {
-        var spawn = Random.Range(0, _spawnPoints.Count);
+        var waitForSeconds = new WaitForSeconds(_delay);
 
         if(_appleCoins.Count <= _spawnPoints.Count)
         { 
             for (int i = 0; i < _appleCoins.Count; i++)
             {
-                var waitForSeconds = new WaitForSeconds(_delay);
+                var spawn = Random.Range(0, _spawnPoints.Count);    
                 Instantiate(_appleCoins[i], _spawnPoints[spawn].transform.position, Quaternion.identity);
                 _spawnPoints.RemoveAt(spawn);
                 yield return waitForSeconds;
