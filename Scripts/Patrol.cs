@@ -2,11 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(SpriteRenderer))]
-
-public class Enemy : MonoBehaviour
+public class Patrol : MonoBehaviour
 {
     [SerializeField] private Transform _turningPointA;
     [SerializeField] private Transform _turningPointB;
@@ -29,21 +25,22 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        Patrol();
-        Flip();
+        Movement();
     }
 
-    private void Patrol()
+    private void Movement()
     {
         _animator.SetFloat(_move, Mathf.Abs(_moveVector.x));
 
         if (_turningPointA.position.x >= transform.position.x)
         {
             _moveVector.x = _direction;
+            Flip();
         }
         else if (_turningPointB.position.x <= transform.position.x)
         {
-            _moveVector.x = - _direction;
+            _moveVector.x = -_direction;
+            Flip();
         }
 
         _rigidbody.velocity = new Vector2(_moveVector.x * _speed, _rigidbody.velocity.y);
